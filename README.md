@@ -68,6 +68,23 @@ Manage users, posts, comments, friend requests and notifications.
 5. Send and accept a friend request
 6. Use the search bar to find users
 
+## 📱 Screenshots
+
+### 🏠 Main Page
+![Home](screenshots/Main_page.png)
+
+### 🔐 Login
+![Login](screenshots/Login.png)
+
+### 👥 Friends
+![Friends](screenshots/Friends.png)
+
+### 🔔 Notifications
+![Notifications](screenshots/notification.png)
+
+### ✏️ Edit Profile
+![Edit Profile](screenshots/edit_profile.png)
+
 ## 👩‍💻 Author
 Lakshita
 Built as part of Month 2 — Web Development with Django
