@@ -23,31 +23,6 @@ A fully-featured social media platform built with Django as part of a Python web
 - Django REST Framework
 - Django Crispy Forms
 
-## ⚙️ Setup Instructions
-
-1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/social-media-platform-django.git
-cd social-media-platform-django
-
-2. Create and activate virtual environment
-python -m venv venv
-venv\Scripts\activate
-
-3. Install dependencies
-pip install -r requirements.txt
-
-4. Run migrations
-python manage.py migrate
-
-5. Create admin account
-python manage.py createsuperuser
-
-6. Start the server
-python manage.py runserver
-
-7. Open in browser
-http://127.0.0.1:8000/
-
 ## 📁 Project Structure
 social_platform/
 ├── manage.py
