@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="row">
+    <!-- Feed -->
+    <div class="col-md-8">
+        <!-- Create Post -->
+        {% if user.is_authenticated %}
+        <div class="card p-3 mb-4">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary mt-2">Post</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Posts -->
+        {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <!-- Post Header -->
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                             style="width:45px;height:45px;font-size:1.2rem;">
+                            {{ post.author.username|first|upper }}
+                        </div>
+                        <div>
+                            <a href="{% url 'user-profile' post.author.username %}"
+                               class="fw-bold text-decoration-none text-dark">
+                                {{ post.author.username }}
+                            </a>
+                            <br>
+                            <small class="text-muted">{{ post.created_at|timesince }} ago</small>
+                        </div>
+                    </div>
+                    <!-- Delete button -->
+                    {% if user == post.author %}
+                    <form method="POST" action="{% url 'delete-post' post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Delete this post?')">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <!-- Post Content -->
+                <p class="mb-2">{{ post.content }}</p>
+
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" class="img-fluid rounded mb-3">
+                {% endif %}
+
+                <!-- Like & Comment Count -->
+                <div class="d-flex gap-3 mb-3">
+                    <form method="POST" action="{% url 'like-post' post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            ❤️ {{ post.like_count }} Likes
+                        </button>
+                    </form>
+                    <span class="align-self-center text-muted">
+                        💬 {{ post.comments.count }} Comments
+                    </span>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="border-top pt-2">
+                    {% for comment in post.comments.all %}
+                        <div class="bg-light rounded p-2 mb-2">
+                            <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                            <br>
+                            <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+                        </div>
+                    {% endfor %}
+
+                    <!-- Add Comment -->
+                    {% if user.is_authenticated %}
+                    <form method="POST" action="{% url 'add-comment' post.pk %}" class="mt-2">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="content" class="form-control form-control-sm"
+                                   placeholder="Write a comment...">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Send</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="card p-4 text-center">
+                <h5>No posts yet!</h5>
+                <p class="text-muted">Be the first to post something.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        {% if user.is_authenticated %}
+        <div class="card p-3 mb-3">
+            <h6>👤 Your Profile</h6>
+            <p class="mb-1"><strong>{{ user.username }}</strong></p>
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm w-100">View Profile</a>
+        </div>
+        <div class="card p-3">
+            <h6>🔍 Find People</h6>
+            <a href="{% url 'search' %}" class="btn btn-outline-secondary btn-sm w-100">Search Users</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

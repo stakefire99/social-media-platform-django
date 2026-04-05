@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Friends{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+
+        <!-- Pending Friend Requests -->
+        <div class="card p-4 mb-4">
+            <h5>📩 Friend Requests</h5>
+            {% for req in requests %}
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                    <span>👤 <strong>{{ req.from_user.username }}</strong> sent you a friend request</span>
+                    <a href="{% url 'accept-request' req.pk %}" class="btn btn-sm btn-success">Accept</a>
+                </div>
+            {% empty %}
+                <p class="text-muted">No pending requests.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Friends List -->
+        <div class="card p-4">
+            <h5>👥 Your Friends</h5>
+
+            {% for friend in friends_sent %}
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width:35px;height:35px;">
+                        {{ friend.to_user.username|first|upper }}
+                    </div>
+                    <a href="{% url 'user-profile' friend.to_user.username %}" class="text-decoration-none text-dark">
+                        <strong>{{ friend.to_user.username }}</strong>
+                    </a>
+                </div>
+            {% endfor %}
+
+            {% for friend in friends_received %}
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width:35px;height:35px;">
+                        {{ friend.from_user.username|first|upper }}
+                    </div>
+                    <a href="{% url 'user-profile' friend.from_user.username %}" class="text-decoration-none text-dark">
+                        <strong>{{ friend.from_user.username }}</strong>
+                    </a>
+                </div>
+            {% endfor %}
+
+            {% if not friends_sent and not friends_received %}
+                <p class="text-muted">No friends yet. Start adding some!</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
